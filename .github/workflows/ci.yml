@@ -23,13 +23,13 @@ jobs:
           dotnet-version: 10
       - name: build
         run: dotnet build
-      - name: test Finbuckle.MultiTenant
+      - name: test Finbuckle.MultiTenant.Vault
         run: dotnet test --no-build -v q -f net${{ matrix.dotnet }}
-        working-directory: ./test/Finbuckle.MultiTenant.Test
-      - name: test Finbuckle.MultiTenant.AspNetCore
+        working-directory: ./test/Finbuckle.MultiTenant.Vault.Test
+      - name: test Finbuckle.MultiTenant.Vault.AspNetCore
         run: dotnet test --no-build -v q -f net${{ matrix.dotnet }}
-        working-directory: ./test/Finbuckle.MultiTenant.AspNetCore.Test
-      - name: test Finbuckle.MultiTenant.EntityFrameworkCore
+        working-directory: ./test/Finbuckle.MultiTenant.Vault.AspNetCore.Test
+      - name: test Finbuckle.MultiTenant.Vault.EntityFrameworkCore
         run: dotnet test --no-build -v q -f net${{ matrix.dotnet }}
-        working-directory: ./test/Finbuckle.MultiTenant.EntityFrameworkCore.Test
+        working-directory: ./test/Finbuckle.MultiTenant.Vault.EntityFrameworkCore.Test
         
