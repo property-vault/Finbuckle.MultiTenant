@@ -36,8 +36,8 @@ public static class EntityTypeBuilderExtensions
             // remove the multi-tenant annotation
             builder.Metadata.SetAnnotation(Constants.MultiTenantAnnotationName, false);
 
-            // remove the shadow tenant id property if it exists
-            if (builder.Metadata.GetProperty("TenantId") is var property && property.IsShadowProperty())
+            // remove the shadow vault id property if it exists
+            if (builder.Metadata.GetProperty("VaultId") is var property && property.IsShadowProperty())
                 builder.Metadata.RemoveProperty(property);
 
 
@@ -55,7 +55,7 @@ public static class EntityTypeBuilderExtensions
     /// </summary>
     /// <param name="builder">The typed <see cref="EntityTypeBuilder"/> instance.</param>
     /// <returns>A <see cref="MultiTenantEntityTypeBuilder"/> instance.</returns>
-    /// <remarks>A string property named TenantId is used in the query filter. If one does not already exist on the entity a shadow property is used.</remarks>
+    /// <remarks>A string property named VaultId is used in the query filter. If one does not already exist on the entity a shadow property is used.</remarks>
     public static MultiTenantEntityTypeBuilder IsMultiTenant(this EntityTypeBuilder builder)
     {
         if (builder.Metadata.IsMultiTenant())
@@ -65,23 +65,23 @@ public static class EntityTypeBuilderExtensions
 
         try
         {
-            builder.Property<string>("TenantId").IsRequired();
+            builder.Property<string>("VaultId").IsRequired();
         }
         catch (Exception ex)
         {
-            throw new MultiTenantException($"{builder.Metadata.ClrType} unable to add TenantId property", ex);
+            throw new MultiTenantException($"{builder.Metadata.ClrType} unable to add VaultId property", ex);
         }
 
-        // build expression tree for e => EF.Property<string>(e, "TenantId") == TenantInfo.Id
+        // build expression tree for e => EF.Property<string>(e, "VaultId") == TenantInfo.Id
 
         // where e is one of our entity types
         // will need this ParameterExpression for next step and for final step
         var entityParamExp = Expression.Parameter(builder.Metadata.ClrType, "e");
 
-        // build up expression tree for: EF.Property<string>(e, "TenantId")
-        var tenantIdExp = Expression.Constant("TenantId", typeof(string));
+        // build up expression tree for: EF.Property<string>(e, "VaultId")
+        var vaultIdExp = Expression.Constant("VaultId", typeof(string));
         var efPropertyExp = Expression.Call(typeof(EF), nameof(EF.Property), new[] { typeof(string) }, entityParamExp,
-            tenantIdExp);
+            vaultIdExp);
         var leftExp = efPropertyExp;
 
         // build up express tree for: TenantInfo.Id
@@ -93,7 +93,7 @@ public static class EntityTypeBuilderExtensions
             Expression.Property(contextMemberAccessExp, nameof(IMultiTenantDbContext.TenantInfo));
         var rightExp = Expression.Property(contextTenantInfoExp, nameof(IMultiTenantDbContext.TenantInfo.Id));
 
-        // build expression tree for EF.Property<string>(e, "TenantId") == TenantInfo.Id'
+        // build expression tree for EF.Property<string>(e, "VaultId") == TenantInfo.Id'
         var predicate = Expression.Equal(leftExp, rightExp);
 
         // build the final expression tree

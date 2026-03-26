@@ -42,7 +42,7 @@ public class MultiTenantStoreWrapperShould : MultiTenantStoreTestBase
     }
 
     [Fact]
-    public async Task ThrowWhenGettingByIdIfTenantIdIsNull()
+    public async Task ThrowWhenGettingByIdIfVaultIdIsNull()
     {
         var store = await CreateTestStore();
 
@@ -130,7 +130,7 @@ public class MultiTenantStoreWrapperShould : MultiTenantStoreTestBase
     }
 
     [Fact]
-    public async Task ReturnFalseWhenUpdatingIfTenantIdIsNotFound()
+    public async Task ReturnFalseWhenUpdatingIfVaultIdIsNotFound()
     {
         var store = await CreateTestStore();
 

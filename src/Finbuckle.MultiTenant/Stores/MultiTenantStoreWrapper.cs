@@ -53,14 +53,14 @@ public class MultiTenantStoreWrapper<TTenantInfo> : IMultiTenantStore<TTenantInf
         {
             if (_logger.IsEnabled(LogLevel.Debug))
             {
-                _logger.LogDebug($"{nameof(GetAsync)}: Tenant Id \"{{TenantId}}\" found.", id);
+                _logger.LogDebug($"{nameof(GetAsync)}: Vault Id \"{{VaultID}}\" found.", id);
             }
         }
         else
         {
             if (_logger.IsEnabled(LogLevel.Debug))
             {
-                _logger.LogDebug($"{nameof(GetAsync)}: Unable to find Tenant Id \"{{TenantId}}\".", id);
+                _logger.LogDebug($"{nameof(GetAsync)}: Unable to find Vault Id \"{{VaultId}}\".", id);
             }
         }
 
@@ -156,7 +156,7 @@ public class MultiTenantStoreWrapper<TTenantInfo> : IMultiTenantStore<TTenantInf
                 if (_logger.IsEnabled(LogLevel.Debug))
                 {
                     _logger.LogDebug(
-                        $"{nameof(AddAsync)}: Tenant already exists. Id: \"{{TenantId}}\", Identifier: \"{{TenantIdentifier}}\"",
+                        $"{nameof(AddAsync)}: Tenant already exists. Id: \"{{VaultId}}\", Identifier: \"{{TenantIdentifier}}\"",
                         tenantInfo.Id, tenantInfo.Identifier);
                 }
             }
@@ -168,7 +168,7 @@ public class MultiTenantStoreWrapper<TTenantInfo> : IMultiTenantStore<TTenantInf
                     if (_logger.IsEnabled(LogLevel.Debug))
                     {
                         _logger.LogDebug(
-                            $"{nameof(AddAsync)}: Tenant already exists. Id: \"{{TenantId}}\", Identifier: \"{{TenantIdentifier}}\"",
+                            $"{nameof(AddAsync)}: Tenant already exists. Id: \"{{VaultId}}\", Identifier: \"{{TenantIdentifier}}\"",
                             tenantInfo.Id, tenantInfo.Identifier);
                     }
                 }
@@ -186,7 +186,7 @@ public class MultiTenantStoreWrapper<TTenantInfo> : IMultiTenantStore<TTenantInf
             if (_logger.IsEnabled(LogLevel.Debug))
             {
                 _logger.LogDebug(
-                    $"{nameof(AddAsync)}: Tenant added. Id: \"{{TenantId}}\", Identifier: \"{{TenantIdentifier}}\"",
+                    $"{nameof(AddAsync)}: Tenant added. Id: \"{{VaultId}}\", Identifier: \"{{TenantIdentifier}}\"",
                     tenantInfo.Id, tenantInfo.Identifier);
             }
         }
@@ -195,7 +195,7 @@ public class MultiTenantStoreWrapper<TTenantInfo> : IMultiTenantStore<TTenantInf
             if (_logger.IsEnabled(LogLevel.Debug))
             {
                 _logger.LogDebug(
-                    $"{nameof(AddAsync)}: Unable to add Tenant. Id: \"{{TenantId}}\", Identifier: \"{{TenantIdentifier}}\"",
+                    $"{nameof(AddAsync)}: Unable to add Tenant. Id: \"{{VaultId}}\", Identifier: \"{{TenantIdentifier}}\"",
                     tenantInfo.Id, tenantInfo.Identifier);
             }
         }
@@ -251,7 +251,7 @@ public class MultiTenantStoreWrapper<TTenantInfo> : IMultiTenantStore<TTenantInf
             {
                 if (_logger.IsEnabled(LogLevel.Debug))
                 {
-                    _logger.LogDebug($"{nameof(UpdateAsync)}: Tenant Id: \"{{TenantId}}\" not found", tenantInfo.Id);
+                    _logger.LogDebug($"{nameof(UpdateAsync)}: Tenant Id: \"{{VaultId}}\" not found", tenantInfo.Id);
                 }
             }
             else
@@ -266,11 +266,11 @@ public class MultiTenantStoreWrapper<TTenantInfo> : IMultiTenantStore<TTenantInf
         {
             if (result)
             {
-                _logger.LogDebug($"{nameof(UpdateAsync)}: Tenant Id: \"{{TenantId}}\" updated", tenantInfo.Id);
+                _logger.LogDebug($"{nameof(UpdateAsync)}: Tenant Id: \"{{VaultId}}\" updated", tenantInfo.Id);
             }
             else
             {
-                _logger.LogDebug($"{nameof(UpdateAsync)}: Unable to update Tenant Id: \"{{TenantId}}\"", tenantInfo.Id);
+                _logger.LogDebug($"{nameof(UpdateAsync)}: Unable to update Tenant Id: \"{{VaultId}}\"", tenantInfo.Id);
             }
         }
 

@@ -9,16 +9,16 @@ namespace Finbuckle.MultiTenant.EntityFrameworkCore.Extensions;
 public static class MultiTenantEntityTypeBuilderExtensions
 {
     /// <summary>
-    /// Adds TenantId to all unique indexes.
+    /// Adds VaultId to all unique indexes.
     /// </summary>
     /// <param name="builder">The <see cref="MultiTenantEntityTypeBuilder"/> instance.</param>
     /// <returns>The <see cref="MultiTenantEntityTypeBuilder"/> instance.</returns>
     public static MultiTenantEntityTypeBuilder AdjustUniqueIndexes(this MultiTenantEntityTypeBuilder builder)
     {
-        // Update any unique constraints to include TenantId (unless they already do)
+        // Update any unique constraints to include VaultId (unless they already do)
         var indexes = builder.Builder.Metadata.GetIndexes()
             .Where(i => i.IsUnique)
-            .Where(i => !i.Properties.Select(p => p.Name).Contains("TenantId"))
+            .Where(i => !i.Properties.Select(p => p.Name).Contains("VaultId"))
             .ToList();
 
         foreach (var index in indexes.ToArray())
@@ -30,15 +30,15 @@ public static class MultiTenantEntityTypeBuilderExtensions
     }
 
     /// <summary>
-    /// Adds TenantId to all indexes.
+    /// Adds VaultId to all indexes.
     /// </summary>
     /// <param name="builder">The <see cref="MultiTenantEntityTypeBuilder"/> instance.</param>
     /// <returns>The <see cref="MultiTenantEntityTypeBuilder"/> instance.</returns>
     public static MultiTenantEntityTypeBuilder AdjustIndexes(this MultiTenantEntityTypeBuilder builder)
     {
-        // Update any unique constraints to include TenantId (unless they already do)
+        // Update any unique constraints to include VaultId (unless they already do)
         var indexes = builder.Builder.Metadata.GetIndexes()
-            .Where(i => !i.Properties.Select(p => p.Name).Contains("TenantId"))
+            .Where(i => !i.Properties.Select(p => p.Name).Contains("VaultId"))
             .ToList();
 
         foreach (var index in indexes.ToArray())
@@ -51,7 +51,7 @@ public static class MultiTenantEntityTypeBuilderExtensions
 
     // TODO why was this internal?
     // <summary>
-    // Adds TenantId to the primary and alternate keys and adds the TenantId property to any dependent types' foreign keys.
+    // Adds VaultId to the primary and alternate keys and adds the VaultId property to any dependent types' foreign keys.
     // </summary>
     // <param name="builder">The MultiTenantEntityTypeBuilder instance.</param>
     // <param name="modelBuilder">The modelBuilder for the database context.</param>

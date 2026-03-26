@@ -38,7 +38,7 @@ public class MultiTenantEntityTypeBuilderExtensionsShould
 
         foreach (var index in indexes!.Where(i => i.IsUnique))
         {
-            Assert.Contains("TenantId", index.Properties.Select(p => p.Name));
+            Assert.Contains("VaultId", index.Properties.Select(p => p.Name));
         }
     }
 
@@ -60,7 +60,7 @@ public class MultiTenantEntityTypeBuilderExtensionsShould
 
         foreach (var index in indexes!.Where(i => !i.IsUnique))
         {
-            Assert.DoesNotContain("TenantId", index.Properties.Select(p => p.Name));
+            Assert.DoesNotContain("VaultId", index.Properties.Select(p => p.Name));
         }
     }
 
@@ -82,7 +82,7 @@ public class MultiTenantEntityTypeBuilderExtensionsShould
 
         foreach (var index in indexes!)
         {
-            Assert.Contains("TenantId", index.Properties.Select(p => p.Name));
+            Assert.Contains("VaultId", index.Properties.Select(p => p.Name));
         }
     }
 }

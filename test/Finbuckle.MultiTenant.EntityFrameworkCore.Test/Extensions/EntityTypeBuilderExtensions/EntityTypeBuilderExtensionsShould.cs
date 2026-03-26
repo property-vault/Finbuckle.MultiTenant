@@ -45,10 +45,10 @@ public class EntityTypeBuilderExtensionsShould : IDisposable
     }
 
     [Fact]
-    public void AddTenantIdStringShadowProperty()
+    public void AddVaultIdStringShadowProperty()
     {
         using var db = GetDbContext();
-        var prop = db.Model.FindEntityType(typeof(MyMultiTenantThing))?.FindProperty("TenantId");
+        var prop = db.Model.FindEntityType(typeof(MyMultiTenantThing))?.FindProperty("VaultId");
 
         Assert.Equal(typeof(string), prop?.ClrType);
         Assert.True(prop?.IsShadowProperty());
@@ -56,10 +56,10 @@ public class EntityTypeBuilderExtensionsShould : IDisposable
     }
 
     [Fact]
-    public void RespectExistingTenantIdStringProperty()
+    public void RespectExistingVaultIdStringProperty()
     {
         using var db = GetDbContext();
-        var prop = db.Model.FindEntityType(typeof(MyThingWithTenantId))?.FindProperty("TenantId");
+        var prop = db.Model.FindEntityType(typeof(MyThingWithVaultId))?.FindProperty("VaultId");
 
         Assert.Equal(typeof(string), prop!.ClrType);
         Assert.False(prop.IsShadowProperty());
@@ -67,9 +67,9 @@ public class EntityTypeBuilderExtensionsShould : IDisposable
     }
 
     [Fact]
-    public void ThrowOnNonStringExistingTenantIdProperty()
+    public void ThrowOnNonStringExistingVaultIdProperty()
     {
-        using var db = GetDbContext(b => b.Entity<MyThingWithIntTenantId>().IsMultiTenant());
+        using var db = GetDbContext(b => b.Entity<MyThingWithIntVaultId>().IsMultiTenant());
         Assert.Throws<MultiTenantException>(() => db.Model);
     }
 
@@ -126,14 +126,14 @@ public class EntityTypeBuilderExtensionsShould : IDisposable
     }
     
     [Fact]
-    public void RemoveShadowTenantIdPropertyForNonMultiTenantEntity()
+    public void RemoveShadowVaultIdPropertyForNonMultiTenantEntity()
     {
         using var db = GetDbContext(b =>
         { 
             b.Entity<MyNonMultiTenantThing>().IsMultiTenant();
             b.Entity<MyNonMultiTenantThing>().IsNotMultiTenant();
         });
-        var prop = db.Model.FindEntityType(typeof(MyNonMultiTenantThing))?.FindProperty("TenantId");
+        var prop = db.Model.FindEntityType(typeof(MyNonMultiTenantThing))?.FindProperty("VaultId");
 
         Assert.Null(prop);
     }

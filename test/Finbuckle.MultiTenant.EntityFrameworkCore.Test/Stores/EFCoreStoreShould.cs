@@ -56,7 +56,7 @@ public class EfCoreStoreShould
     }
 
     [Fact]
-    public void AddTenantIdAsKey()
+    public void AddVaultIdAsKey()
     {
         var prop = GetModelProperty("Id");
         Assert.True(prop!.IsPrimaryKey());

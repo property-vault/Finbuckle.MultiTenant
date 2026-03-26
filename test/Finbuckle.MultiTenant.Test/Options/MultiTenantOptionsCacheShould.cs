@@ -216,7 +216,7 @@ public class MultiTenantOptionsCacheShould
     }
 
     [Fact]
-    public void ClearOptionsForTenantIdOnly()
+    public void ClearOptionsForVaultIdOnly()
     {
         var ti = new TenantInfo { Id = "test-id-123", Identifier = "" };
         var tc = new MultiTenantContext<TenantInfo>(ti);

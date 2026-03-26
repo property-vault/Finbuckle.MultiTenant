@@ -37,7 +37,7 @@ public class MultiTenantEntityTypeBuilderShould
 
         var index = db.Model.FindEntityType(typeof(Blog))?.GetIndexes().First();
         Assert.Contains("BlogId", index!.Properties.Select(p => p.Name));
-        Assert.Contains("TenantId", index.Properties.Select(p => p.Name));
+        Assert.Contains("VaultId", index.Properties.Select(p => p.Name));
     }
 
     [Fact]
@@ -110,7 +110,7 @@ public class MultiTenantEntityTypeBuilderShould
         Assert.Single((IEnumerable)key!);
         Assert.Equal(2, key![0].Properties.Count);
         Assert.Contains("PostId", key[0].Properties.Select(p => p.Name));
-        Assert.Contains("TenantId", key[0].Properties.Select(p => p.Name));
+        Assert.Contains("VaultId", key[0].Properties.Select(p => p.Name));
     }
 
     [Fact]
@@ -128,7 +128,7 @@ public class MultiTenantEntityTypeBuilderShould
         Assert.Single((IEnumerable)key!);
         Assert.Equal(2, key![0].Properties.Count);
         Assert.Contains("BlogId", key[0].Properties.Select(p => p.Name));
-        Assert.Contains("TenantId", key[0].Properties.Select(p => p.Name));
+        Assert.Contains("VaultId", key[0].Properties.Select(p => p.Name));
     }
 
     [Fact]
@@ -145,7 +145,7 @@ public class MultiTenantEntityTypeBuilderShould
         Assert.Single((IEnumerable)key!);
         Assert.Equal(2, key![0].Properties.Count);
         Assert.Contains("Url", key[0].Properties.Select(p => p.Name));
-        Assert.Contains("TenantId", key[0].Properties.Select(p => p.Name));
+        Assert.Contains("VaultId", key[0].Properties.Select(p => p.Name));
     }
 
     [Fact]
@@ -167,7 +167,7 @@ public class MultiTenantEntityTypeBuilderShould
         Assert.Single((IEnumerable)key!);
         Assert.Equal(2, key![0].Properties.Count);
         Assert.Contains("Title", key[0].Properties.Select(p => p.Name));
-        Assert.Contains("TenantId", key[0].Properties.Select(p => p.Name));
+        Assert.Contains("VaultId", key[0].Properties.Select(p => p.Name));
     }
 
     [Fact]

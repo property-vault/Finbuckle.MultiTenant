@@ -16,12 +16,12 @@ public interface IMultiTenantDbContext
     ITenantInfo? TenantInfo { get; }
 
     /// <summary>
-    /// Gets the mode used to handle entities where TenantId does not match the current tenant.
+    /// Gets the mode used to handle entities where VaultId does not match the current tenant.
     /// </summary>
     TenantMismatchMode TenantMismatchMode { get; }
 
     /// <summary>
-    /// Gets the mode used to handle entities where TenantId is not set.
+    /// Gets the mode used to handle entities where VaultId is not set.
     /// </summary>
     TenantNotSetMode TenantNotSetMode { get; }
 }

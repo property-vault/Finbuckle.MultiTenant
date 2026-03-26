@@ -28,21 +28,21 @@ public class MultiTenantEntityTypeBuilder
     }
 
     /// <summary>
-    /// Adds TenantId to the index.
+    /// Adds VaultId to the index.
     /// </summary>
-    /// <param name="index">The index to adjust for TenantId.</param>
+    /// <param name="index">The index to adjust for VaultId.</param>
     /// <returns>The <see cref="MultiTenantEntityTypeBuilder"/> instance.</returns>
     public MultiTenantEntityTypeBuilder AdjustIndex(IMutableIndex index)
     {
-        // set the new unique index with TenantId preserving name and database name
+        // set the new unique index with VaultId preserving name and database name
         IndexBuilder indexBuilder;
         Builder.Metadata.RemoveIndex(index);
         if (index.Name != null)
             indexBuilder = Builder
-                .HasIndex(index.Properties.Select(p => p.Name).Append("TenantId").ToArray(), index.Name)
+                .HasIndex(index.Properties.Select(p => p.Name).Append("VaultId").ToArray(), index.Name)
                 .HasDatabaseName(index.GetDatabaseName());
         else
-            indexBuilder = Builder.HasIndex(index.Properties.Select(p => p.Name).Append("TenantId").ToArray())
+            indexBuilder = Builder.HasIndex(index.Properties.Select(p => p.Name).Append("VaultId").ToArray())
                 .HasDatabaseName(index.GetDatabaseName());
 
         if (index.IsUnique)
@@ -62,14 +62,14 @@ public class MultiTenantEntityTypeBuilder
     }
 
     /// <summary>
-    /// Adds TenantId to the key and adds the TenantId property to any dependent types' foreign keys.
+    /// Adds VaultId to the key and adds the VaultId property to any dependent types' foreign keys.
     /// </summary>
-    /// <param name="key">The key to adjust for TenantId.</param>
+    /// <param name="key">The key to adjust for VaultId.</param>
     /// <param name="modelBuilder">The modelBuilder for the DbContext.</param>
     /// <returns>The MultiTenantEntityTypeBuilder&lt;T&gt; instance.</returns>
     public MultiTenantEntityTypeBuilder AdjustKey(IMutableKey key, ModelBuilder modelBuilder)
     {
-        var prop = Builder.Metadata.GetProperty("TenantId");
+        var prop = Builder.Metadata.GetProperty("VaultId");
         var props = key.Properties.Append(prop).ToImmutableList();
         var foreignKeys = key.GetReferencingForeignKeys().ToArray();
         var annotations = key.GetAnnotations();
@@ -78,7 +78,7 @@ public class MultiTenantEntityTypeBuilder
         foreach (var fk in foreignKeys)
         {
             var fkEntityBuilder = modelBuilder.Entity(fk.DeclaringEntityType.ClrType);
-            var newFkProp = fkEntityBuilder.Property<string>("TenantId").Metadata;
+            var newFkProp = fkEntityBuilder.Property<string>("VaultId").Metadata;
             var fkProps = fk.Properties.Append(newFkProp).ToImmutableList();
             fk.SetProperties(fkProps, newKey!);
         }

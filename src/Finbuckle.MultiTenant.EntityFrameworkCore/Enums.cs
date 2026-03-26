@@ -4,7 +4,7 @@
 namespace Finbuckle.MultiTenant.EntityFrameworkCore;
 
 /// <summary>
-/// Determines how entities where TenantId does not match the TenantContext are handled
+/// Determines how entities where VaultId does not match the TenantContext are handled
 /// when SaveChanges or SaveChangesAsync is called.
 /// </summary>
 public enum TenantMismatchMode
@@ -20,24 +20,24 @@ public enum TenantMismatchMode
     Ignore,
 
     /// <summary>
-    /// Overwrite the entity's TenantId with the current tenant's Id.
+    /// Overwrite the entity's VaultId with the current tenant's Id.
     /// </summary>
     Overwrite
 }
 
 /// <summary>
-/// Determines how entities with null TenantId are handled
+/// Determines how entities with null VaultId are handled
 /// when SaveChanges or SaveChangesAsync is called.
 /// </summary>
 public enum TenantNotSetMode
 {
     /// <summary>
-    /// Throw an exception when TenantId is not set.
+    /// Throw an exception when VaultId is not set.
     /// </summary>
     Throw,
 
     /// <summary>
-    /// Overwrite the entity's TenantId with the current tenant's Id.
+    /// Overwrite the entity's VaultId with the current tenant's Id.
     /// </summary>
     Overwrite
 }

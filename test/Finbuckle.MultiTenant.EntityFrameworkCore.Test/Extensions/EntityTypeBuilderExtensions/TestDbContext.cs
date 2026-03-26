@@ -12,8 +12,8 @@ public class TestDbContext(Action<ModelBuilder>? config, TenantInfo tenantInfo, 
     : EntityFrameworkCore.MultiTenantDbContext(new StaticMultiTenantContextAccessor<TenantInfo>(tenantInfo), options)
 {
     public DbSet<MyMultiTenantThing>? MyMultiTenantThings { get; set; }
-    public DbSet<MyThingWithTenantId>? MyThingsWithTenantIds { get; set; }
-    public DbSet<MyThingWithIntTenantId>? MyThingsWithIntTenantId { get; set; }
+    public DbSet<MyThingWithVaultId>? MyThingsWithVaultIds { get; set; }
+    public DbSet<MyThingWithIntVaultId>? MyThingsWithIntVaultId { get; set; }
     public DbSet<MyMultiTenantThingWithAttribute>? MyMultiTenantThingsWithAttribute { get; set; }
     public DbSet<MyNonMultiTenantThing>? MyNonMultiTenantThings { get; set; }
 
@@ -26,7 +26,7 @@ public class TestDbContext(Action<ModelBuilder>? config, TenantInfo tenantInfo, 
         else
         {
             modelBuilder.Entity<MyMultiTenantThing>().IsMultiTenant();
-            modelBuilder.Entity<MyThingWithTenantId>().IsMultiTenant();
+            modelBuilder.Entity<MyThingWithVaultId>().IsMultiTenant();
         }
 
         base.OnModelCreating(modelBuilder);
@@ -62,14 +62,14 @@ public class MyMultiTenantThingWithAttribute
     public int Id { get; set; }
 }
 
-public class MyThingWithTenantId
+public class MyThingWithVaultId
 {
     public int Id { get; set; }
-    public string? TenantId { get; set; }
+    public string? VaultId { get; set; }
 }
 
-public class MyThingWithIntTenantId
+public class MyThingWithIntVaultId
 {
     public int Id { get; set; }
-    public int TenantId { get; set; }
+    public int VaultId { get; set; }
 }

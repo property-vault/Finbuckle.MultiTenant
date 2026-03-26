@@ -68,7 +68,7 @@ public class MultiTenantIdentityDbContextShould
         var et = c.Model.FindEntityType(entityType);
         Assert.NotNull(et);
         foreach (var idx in et.GetIndexes().Where(i => i.IsUnique))
-            Assert.Contains("TenantId", idx.Properties.Select(p => p.Name));
+            Assert.Contains("VaultId", idx.Properties.Select(p => p.Name));
     }
 
     [Fact]
@@ -77,10 +77,10 @@ public class MultiTenantIdentityDbContextShould
         var c = CreateDbContextViaDi<TestIdentityDbContext>(2);
         var et = c.Model.FindEntityType(typeof(IdentityUserPasskey<string>));
         if (et == null) return; // Passkey not present for schema 2.
-        // For schema 2 passkey should NOT be multi-tenant and unique indexes should not include TenantId.
+        // For schema 2 passkey should NOT be multi-tenant and unique indexes should not include VaultId.
         Assert.False(et.IsMultiTenant());
         var uniqueProps = et.GetIndexes().Where(i => i.IsUnique).SelectMany(i => i.Properties.Select(p => p.Name));
-        Assert.DoesNotContain("TenantId", uniqueProps);
+        Assert.DoesNotContain("VaultId", uniqueProps);
     }
 
     [Theory]
@@ -98,7 +98,7 @@ public class MultiTenantIdentityDbContextShould
         var et = c.Model.FindEntityType(entityType);
         Assert.NotNull(et);
         foreach (var idx in et.GetIndexes().Where(i => i.IsUnique))
-            Assert.Contains("TenantId", idx.Properties.Select(p => p.Name));
+            Assert.Contains("VaultId", idx.Properties.Select(p => p.Name));
     }
 
     [Theory]
