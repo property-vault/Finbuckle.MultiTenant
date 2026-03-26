@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <Title>Finbuckle.MultiTenant.Vault.AspNetCore</Title>
+        <Description>ASP.NET Core support for Finbuckle.MultiTenant.</Description>
+        <RootNamespace>Finbuckle.MultiTenant.Vault.AspNetCore</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App"/>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="10.0.5"/>
+
+        <ProjectReference Include="..\Finbuckle.MultiTenant.Vault\Finbuckle.MultiTenant.Vault.csproj" />
+    </ItemGroup>
+</Project>

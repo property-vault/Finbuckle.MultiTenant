@@ -1,0 +1,9 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <Title>Finbuckle.MultiTenant.Vault.Abstractions</Title>
+        <Description>Abstraction library package for Finbuckle.MultiTenant.</Description>
+        <RootNamespace>Finbuckle.MultiTenant.Vault.Abstractions</RootNamespace>
+    </PropertyGroup>
+
+</Project>

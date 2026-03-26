@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <Title>Finbuckle.MultiTenant.Vault.EntityFrameworkCore</Title>
+        <Description>Entity Framework Core support for Finbuckle.MultiTenant.</Description>
+        <RootNamespace>Finbuckle.MultiTenant.Vault.EntityFrameworkCore</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.5"/>
+
+        <ProjectReference Include="..\Finbuckle.MultiTenant.Vault\Finbuckle.MultiTenant.Vault.csproj" />
+    </ItemGroup>
+</Project>
