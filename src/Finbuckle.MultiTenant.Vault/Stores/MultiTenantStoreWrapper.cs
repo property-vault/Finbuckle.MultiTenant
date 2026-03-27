@@ -34,9 +34,12 @@ public class MultiTenantStoreWrapper<TTenantInfo> : IMultiTenantStore<TTenantInf
     }
 
     /// <inheritdoc />
-    public async Task<TTenantInfo?> GetAsync(string id)
+    public async Task<TTenantInfo?> GetAsync(Guid id)
     {
-        ArgumentNullException.ThrowIfNull(id);
+        if (id == Guid.Empty)
+        {
+            throw new ArgumentNullException(nameof(id));
+        }
 
         TTenantInfo? result = default;
 
@@ -143,7 +146,10 @@ public class MultiTenantStoreWrapper<TTenantInfo> : IMultiTenantStore<TTenantInf
     public async Task<bool> AddAsync(TTenantInfo tenantInfo)
     {
         ArgumentNullException.ThrowIfNull(tenantInfo);
-        ArgumentNullException.ThrowIfNull(tenantInfo.Id);
+        if (tenantInfo.Id == Guid.Empty)
+        {
+            throw new ArgumentNullException(nameof(tenantInfo));
+        }
         ArgumentNullException.ThrowIfNull(tenantInfo.Identifier);
 
         var result = false;
@@ -240,7 +246,10 @@ public class MultiTenantStoreWrapper<TTenantInfo> : IMultiTenantStore<TTenantInf
     public async Task<bool> UpdateAsync(TTenantInfo tenantInfo)
     {
         ArgumentNullException.ThrowIfNull(tenantInfo);
-        ArgumentNullException.ThrowIfNull(tenantInfo.Id);
+        if (tenantInfo.Id == Guid.Empty)
+        {
+            throw new ArgumentNullException(nameof(tenantInfo));
+        }
 
         var result = false;
 

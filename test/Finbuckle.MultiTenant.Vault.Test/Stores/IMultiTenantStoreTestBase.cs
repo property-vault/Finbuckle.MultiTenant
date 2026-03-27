@@ -10,12 +10,16 @@ namespace Finbuckle.MultiTenant.Test.Stores;
 
 public abstract class MultiTenantStoreTestBase
 {
+    private readonly Guid _initechid = Guid.Parse("c8d1f3c7-440e-4e76-bc77-12e33f39136e");
+    private readonly Guid _lolid = Guid.Parse("c8d1f3c7-440e-4e76-bc77-12e33f391364");
+    private readonly Guid _fake123 = Guid.Parse("c8d1f3c7-440e-4e76-bc77-12e33f391366");
+    private readonly Guid _id = Guid.Parse("c8d1f3c7-440e-4e76-bc77-12e33f391363");
     protected abstract Task<IMultiTenantStore<TenantInfo>> CreateTestStore();
 
     protected virtual async Task<IMultiTenantStore<TenantInfo>> PopulateTestStore(IMultiTenantStore<TenantInfo> store)
     {
-        await store.AddAsync(new TenantInfo { Id = "initech-id", Identifier = "initech", Name = "Initech" });
-        await store.AddAsync(new TenantInfo { Id = "lol-id", Identifier = "lol", Name = "Lol, Inc." });
+        await store.AddAsync(new TenantInfo { Id = _initechid, Identifier = "initech", Name = "Initech" });
+        await store.AddAsync(new TenantInfo { Id = _lolid, Identifier = "lol", Name = "Lol, Inc." });
 
         return store;
     }
@@ -25,7 +29,7 @@ public abstract class MultiTenantStoreTestBase
     {
         var store = await CreateTestStore();
 
-        Assert.Equal("initech", (await store.GetAsync("initech-id"))!.Identifier);
+        Assert.Equal("initech", (await store.GetAsync(_initechid))!.Identifier);
     }
 
     //[Fact]
@@ -33,7 +37,7 @@ public abstract class MultiTenantStoreTestBase
     {
         var store = await CreateTestStore();
 
-        Assert.Null(await store.GetAsync("fake123"));
+        Assert.Null(await store.GetAsync(_fake123));
     }
 
     //[Fact]
@@ -57,7 +61,7 @@ public abstract class MultiTenantStoreTestBase
         var store = await CreateTestStore();
 
         Assert.Null(await store.GetByIdentifierAsync("identifier"));
-        Assert.True(await store.AddAsync(new TenantInfo { Id = "id", Identifier = "identifier", Name = "name" }));
+        Assert.True(await store.AddAsync(new TenantInfo { Id = _id, Identifier = "identifier", Name = "name" }));
         Assert.NotNull(await store.GetByIdentifierAsync("identifier"));
     }
 
@@ -66,7 +70,7 @@ public abstract class MultiTenantStoreTestBase
     {
         var store = await CreateTestStore();
 
-        var result = await store.UpdateAsync(new TenantInfo { Id = "initech-id", Identifier = "initech2" });
+        var result = await store.UpdateAsync(new TenantInfo { Id = _initechid, Identifier = "initech2" });
         Assert.True(result);
     }
 

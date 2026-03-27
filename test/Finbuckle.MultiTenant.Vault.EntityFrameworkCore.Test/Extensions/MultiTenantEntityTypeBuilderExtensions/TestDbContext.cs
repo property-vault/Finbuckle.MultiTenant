@@ -10,9 +10,9 @@ namespace Finbuckle.MultiTenant.Vault.EntityFrameworkCore.Test.Extensions.MultiT
 public class TestDbContext : EntityFrameworkCore.MultiTenantDbContext
 {
     private readonly Action<ModelBuilder> _config;
-
+    
     public TestDbContext(Action<ModelBuilder> config, DbContextOptions options) :
-        base(new StaticMultiTenantContextAccessor<TenantInfo>(new TenantInfo { Id = "dummy", Identifier = "" }), options)
+        base(new StaticMultiTenantContextAccessor<TenantInfo>(new TenantInfo { Id =  Guid.Parse("c8d1f3c7-440e-4e76-bc77-12e33f39136e"), Identifier = "" }), options)
     {
         _config = config;
     }

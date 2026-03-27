@@ -14,6 +14,9 @@ public class EntityTypeBuilderExtensionsShould : IDisposable
 {
     private readonly SqliteConnection _connection;
 
+    private readonly Guid _abc = Guid.Parse("c8d1f3c7-440e-4e76-bc77-12e33f39136e");
+    private readonly Guid _123 = Guid.Parse("c8d1f3c7-440e-4e76-bc77-12e33f39136f"); 
+
     public EntityTypeBuilderExtensionsShould()
     {
         _connection = new SqliteConnection("DataSource=:memory:");
@@ -31,7 +34,7 @@ public class EntityTypeBuilderExtensionsShould : IDisposable
             .ReplaceService<IModelCacheKeyFactory, DynamicModelCacheKeyFactory>() // needed for testing only
             .UseSqlite(_connection)
             .Options;
-        return new TestDbContext(config, tenant ?? new TenantInfo { Id = "", Identifier = "" }, options);
+        return new TestDbContext(config, tenant ?? new TenantInfo { Id = Guid.Empty, Identifier = "" }, options);
     }
 
     [Fact]
@@ -50,7 +53,7 @@ public class EntityTypeBuilderExtensionsShould : IDisposable
         using var db = GetDbContext();
         var prop = db.Model.FindEntityType(typeof(MyMultiTenantThing))?.FindProperty("VaultId");
 
-        Assert.Equal(typeof(string), prop?.ClrType);
+        Assert.Equal(typeof(Guid), prop?.ClrType);
         Assert.True(prop?.IsShadowProperty());
         Assert.Null(prop?.FieldInfo);
     }
@@ -61,7 +64,7 @@ public class EntityTypeBuilderExtensionsShould : IDisposable
         using var db = GetDbContext();
         var prop = db.Model.FindEntityType(typeof(MyThingWithVaultId))?.FindProperty("VaultId");
 
-        Assert.Equal(typeof(string), prop!.ClrType);
+        Assert.Equal(typeof(Guid), prop!.ClrType);
         Assert.False(prop.IsShadowProperty());
         Assert.NotNull(prop.FieldInfo);
     }
@@ -77,9 +80,9 @@ public class EntityTypeBuilderExtensionsShould : IDisposable
     public void SetNamedFilterQuery()
     {
         // Doesn't appear to be a way to test this except to try it out...
-        var tenant1 = new TenantInfo { Id = "abc", Identifier = "" };
+        var tenant1 = new TenantInfo { Id = _abc, Identifier = "" };
 
-        var tenant2 = new TenantInfo { Id = "123", Identifier = "" };
+        var tenant2 = new TenantInfo { Id = _123, Identifier = "" };
 
         using var db = GetDbContext(null, tenant1);
         db.Database.EnsureCreated();
@@ -95,9 +98,9 @@ public class EntityTypeBuilderExtensionsShould : IDisposable
     public void CanIgnoreNamedFilterQuery()
     {
         // Doesn't appear to be a way to test this except to try it out...
-        var tenant1 = new TenantInfo { Id = "abc", Identifier = "" };
+        var tenant1 = new TenantInfo { Id = _abc, Identifier = "" };
 
-        var tenant2 = new TenantInfo { Id = "123", Identifier = "" };
+        var tenant2 = new TenantInfo { Id = _123, Identifier = "" };
 
         using var db = GetDbContext(null, tenant1);
         db.Database.EnsureCreated();
@@ -158,8 +161,8 @@ public class EntityTypeBuilderExtensionsShould : IDisposable
     [Fact]
     public void NotFilterNonMultiTenantEntity()
     {
-        var tenant1 = new TenantInfo { Id = "abc", Identifier = "" };
-        var tenant2 = new TenantInfo { Id = "123", Identifier = "" };
+        var tenant1 = new TenantInfo { Id = _abc, Identifier = "" };
+        var tenant2 = new TenantInfo { Id = _123, Identifier = "" };
 
         using var db = GetDbContext(b =>
         {

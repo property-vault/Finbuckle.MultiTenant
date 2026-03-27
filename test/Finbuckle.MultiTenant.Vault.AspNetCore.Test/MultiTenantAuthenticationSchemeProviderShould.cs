@@ -12,6 +12,9 @@ namespace Finbuckle.MultiTenant.Vault.AspNetCore.Test;
 
 public class MultiTenantAuthenticationSchemeProviderShould
 {
+    private readonly Guid _tenant1 = Guid.Parse("27916938-4c49-4ca4-ad14-4bfdbaa52e6f");
+    private readonly Guid _tenant2 = Guid.Parse("27916938-4c49-4ca4-ad14-4bfdbaa52e66");
+    
     [Fact]
     public async Task ReturnPerTenantAuthenticationOptions()
     {
@@ -30,9 +33,9 @@ public class MultiTenantAuthenticationSchemeProviderShould
 
         var sp = services.BuildServiceProvider();
 
-        var tenant1 = new TenantInfo { Id = "tenant1", Identifier = "tenant1" };
+        var tenant1 = new TenantInfo { Id = _tenant1, Identifier = "tenant1" };
 
-        var tenant2 = new TenantInfo { Id = "tenant2", Identifier = "tenant2" };
+        var tenant2 = new TenantInfo { Id = _tenant2, Identifier = "tenant2" };
 
         var mtc = new MultiTenantContext<TenantInfo>(tenant1);
         var setter = sp.GetRequiredService<IMultiTenantContextSetter>();

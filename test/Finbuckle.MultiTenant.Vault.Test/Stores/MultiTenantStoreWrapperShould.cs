@@ -13,6 +13,8 @@ namespace Finbuckle.MultiTenant.Test.Stores;
 public class MultiTenantStoreWrapperShould : MultiTenantStoreTestBase
 {
     // Basic store functionality tested in MultiTenantStoresShould.cs
+    private readonly Guid _initechid = Guid.Parse("c8d1f3c7-440e-4e76-bc77-12e33f39136e");
+    private readonly Guid _initechid2 = Guid.Parse("c8d1f3c7-440e-4e76-bc77-12e33f39136f");
 
     protected override async Task<IMultiTenantStore<TenantInfo>> CreateTestStore()
     {
@@ -46,7 +48,7 @@ public class MultiTenantStoreWrapperShould : MultiTenantStoreTestBase
     {
         var store = await CreateTestStore();
 
-        await Assert.ThrowsAsync<ArgumentNullException>(async () => await store.GetAsync(null!));
+        await Assert.ThrowsAsync<ArgumentNullException>(async () => await store.GetAsync(Guid.Empty));
     }
 
     [Fact]
@@ -86,7 +88,7 @@ public class MultiTenantStoreWrapperShould : MultiTenantStoreTestBase
     public async Task ThrowWhenAddingIfTenantInfoIdIsNull()
     {
         var store = await CreateTestStore();
-        await Assert.ThrowsAsync<ArgumentNullException>(async () => await store.AddAsync(new TenantInfo { Id = null!, Identifier = "" }));
+        await Assert.ThrowsAsync<ArgumentNullException>(async () => await store.AddAsync(new TenantInfo { Id = Guid.Empty, Identifier = "" }));
     }
 
     [Fact]
@@ -94,7 +96,7 @@ public class MultiTenantStoreWrapperShould : MultiTenantStoreTestBase
     {
         var store = await CreateTestStore();
         await Assert.ThrowsAsync<ArgumentNullException>(async () =>
-            await store.AddAsync(new TenantInfo { Id = "initech-id", Identifier = null! }));
+            await store.AddAsync(new TenantInfo { Id = _initechid, Identifier = null! }));
     }
 
     [Fact]
@@ -102,7 +104,7 @@ public class MultiTenantStoreWrapperShould : MultiTenantStoreTestBase
     {
         var store = await CreateTestStore();
         // Try to add with duplicate identifier.
-        Assert.False(await store.AddAsync(new TenantInfo { Id = "initech-id", Identifier = "initech2" }));
+        Assert.False(await store.AddAsync(new TenantInfo { Id = _initechid, Identifier = "initech2" }));
     }
 
     [Fact]
@@ -110,7 +112,7 @@ public class MultiTenantStoreWrapperShould : MultiTenantStoreTestBase
     {
         var store = await CreateTestStore();
         // Try to add with duplicate identifier.
-        Assert.False(await store.AddAsync(new TenantInfo { Id = "initech-id2", Identifier = "initech" }));
+        Assert.False(await store.AddAsync(new TenantInfo { Id = _initechid2, Identifier = "initech" }));
     }
 
     [Fact]
@@ -126,7 +128,7 @@ public class MultiTenantStoreWrapperShould : MultiTenantStoreTestBase
     {
         var store = await CreateTestStore();
 
-        await Assert.ThrowsAsync<ArgumentNullException>(async () => await store.UpdateAsync(new TenantInfo { Id = null!, Identifier = "" }));
+        await Assert.ThrowsAsync<ArgumentNullException>(async () => await store.UpdateAsync(new TenantInfo { Id = Guid.Empty, Identifier = "" }));
     }
 
     [Fact]
@@ -134,7 +136,7 @@ public class MultiTenantStoreWrapperShould : MultiTenantStoreTestBase
     {
         var store = await CreateTestStore();
 
-        var result = await store.UpdateAsync(new TenantInfo { Id = "not-found", Identifier = "" });
+        var result = await store.UpdateAsync(new TenantInfo { Id = Guid.Parse("48d1f3c7-440e-4e76-bc77-12e33f39136e"), Identifier = "" });
         Assert.False(result);
     }
 

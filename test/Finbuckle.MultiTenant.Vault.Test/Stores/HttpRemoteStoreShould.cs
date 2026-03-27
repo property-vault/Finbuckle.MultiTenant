@@ -15,6 +15,7 @@ public class HttpRemoteStoreShould : MultiTenantStoreTestBase
 {
     public class TestHandler : DelegatingHandler
     {
+        private readonly Guid _initechid = Guid.Parse("c8d1f3c7-440e-4e76-bc77-12e33f39136e");
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
             CancellationToken cancellationToken)
         {
@@ -24,7 +25,7 @@ public class HttpRemoteStoreShould : MultiTenantStoreTestBase
             if (string.Equals(request.RequestUri.Segments[numSegments - 1], "initech",
                     StringComparison.OrdinalIgnoreCase))
             {
-                var tenantInfo = new TenantInfo{Id= "initech-id", Identifier= "initech"};
+                var tenantInfo = new TenantInfo{Id= _initechid, Identifier= "initech"};
                 var json = JsonConvert.SerializeObject(tenantInfo);
                 result.StatusCode = HttpStatusCode.OK;
                 result.Content = new StringContent(json);

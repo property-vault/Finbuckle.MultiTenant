@@ -59,13 +59,13 @@ public class MyNonMultiTenantThing
 [MultiTenant]
 public class MyMultiTenantThingWithAttribute
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 }
 
 public class MyThingWithVaultId
 {
     public int Id { get; set; }
-    public string? VaultId { get; set; }
+    public Guid VaultId { get; set; }
 }
 
 public class MyThingWithIntVaultId

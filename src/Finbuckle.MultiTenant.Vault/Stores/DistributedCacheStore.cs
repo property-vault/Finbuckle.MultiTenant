@@ -46,7 +46,7 @@ public class DistributedCacheStore<TTenantInfo> : IMultiTenantStore<TTenantInfo>
     }
 
     /// <inheritdoc />
-    public async Task<TTenantInfo?> GetAsync(string id)
+    public async Task<TTenantInfo?> GetAsync(Guid id)
     {
         var bytes = await cache.GetStringAsync($"{keyPrefix}id__{id}").ConfigureAwait(false);
         if (bytes == null)

@@ -23,6 +23,8 @@ public class EfCoreStoreShould
 
     private readonly SqliteConnection _connection = new SqliteConnection("DataSource=:memory:");
 
+    private readonly Guid _initechid = Guid.Parse("c8d1f3c7-440e-4e76-bc77-12e33f39136e");
+    private readonly Guid _testid = Guid.Parse("c8d1f3c7-440e-4e76-bc77-12e33f39136f");
     public void Dispose()
     {
         _connection.Dispose();
@@ -73,7 +75,7 @@ public class EfCoreStoreShould
     public async Task NotTrackContextOnGet()
     {
         var store = (EFCoreStore<TestEfCoreStoreDbContext, TenantInfo>)await CreateTestStore();
-        var tenant = await store.GetAsync("initech-id");
+        var tenant = await store.GetAsync(_initechid);
 
         var entity = store.dbContext.Entry(tenant!);
         Assert.Equal(EntityState.Detached, entity.State);
@@ -103,7 +105,7 @@ public class EfCoreStoreShould
     public async Task NotTrackContextOnAdd()
     {
         var store = (EFCoreStore<TestEfCoreStoreDbContext, TenantInfo>)await CreateTestStore();
-        var tenant = new TenantInfo { Id = "test-id", Identifier = "test-identifier", Name = "test" };
+        var tenant = new TenantInfo { Id = _testid, Identifier = "test-identifier", Name = "test" };
         await store.AddAsync(tenant);
 
         var entity = store.dbContext.Entry(tenant);
@@ -128,7 +130,7 @@ public class EfCoreStoreShould
         var store = (EFCoreStore<TestEfCoreStoreDbContext, TenantInfo>)await CreateTestStore();
         var tenant = await store.GetByIdentifierAsync("initech");
         tenant = new TenantInfo { Id = tenant!.Id, Identifier = tenant.Identifier, Name = "new name" };
-        await store.RemoveAsync(tenant.Id);
+        await store.RemoveAsync(tenant.Identifier);
 
         var entity = store.dbContext.Entry(tenant);
         Assert.Equal(EntityState.Detached, entity.State);

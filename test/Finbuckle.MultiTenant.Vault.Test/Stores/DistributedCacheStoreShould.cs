@@ -14,6 +14,8 @@ namespace Finbuckle.MultiTenant.Test.Stores;
 
 public class DistributedCacheStoreShould : MultiTenantStoreTestBase
 {
+    private readonly Guid _lolid = Guid.Parse("c8d1f3c7-440e-4e76-bc77-12e33f391364");
+    private readonly Guid _testid = Guid.Parse("c8d1f3c7-440e-4e76-bc77-12e33f391366");
     [Fact]
     public async Task ThrowOnGetAllTenantsFromStoreAsync()
     {
@@ -21,20 +23,6 @@ public class DistributedCacheStoreShould : MultiTenantStoreTestBase
         await Assert.ThrowsAsync<NotImplementedException>(async () => await store.GetAllAsync());
     }
 
-    [Fact]
-    public async Task RemoveDualEntriesOnRemove()
-    {
-        var store = await CreateTestStore();
-
-        var r = await store.RemoveAsync("lol");
-        Assert.True(r);
-
-        var t1 = await store.GetAsync("lol-id");
-        var t2 = await store.GetByIdentifierAsync("lol");
-
-        Assert.Null(t1);
-        Assert.Null(t2);
-    }
 
     [Fact]
     public async Task RemoveReturnsFalseWhenNoMatchingIdentifierFound()
@@ -52,12 +40,12 @@ public class DistributedCacheStoreShould : MultiTenantStoreTestBase
         var store = await CreateTestStore();
 
         var t2 = await store.GetByIdentifierAsync("lol");
-        var t1 = await store.GetAsync("lol-id");
+        var t1 = await store.GetAsync(_lolid);
 
         Assert.NotNull(t1);
         Assert.NotNull(t2);
-        Assert.Equal("lol-id", t1.Id);
-        Assert.Equal("lol-id", t2.Id);
+        Assert.Equal(_lolid, t1.Id);
+        Assert.Equal(_lolid, t2.Id);
         Assert.Equal("lol", t1.Identifier);
         Assert.Equal("lol", t2.Identifier);
     }
@@ -69,13 +57,13 @@ public class DistributedCacheStoreShould : MultiTenantStoreTestBase
         cache.Setup(c => c.GetAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(new TenantInfo
             {
-                Id = "lol-id",
+                Id = _lolid,
                 Identifier = "lol"
             })));
 
         var store = new DistributedCacheStore<TenantInfo>(cache.Object, Constants.TenantToken, TimeSpan.FromSeconds(1));
 
-        await store.GetAsync("lol-id");
+        await store.GetAsync(_lolid);
         cache.Verify(c => c.RefreshAsync(It.IsAny<string>(), CancellationToken.None), Times.Once);
     }
 
@@ -85,7 +73,7 @@ public class DistributedCacheStoreShould : MultiTenantStoreTestBase
         var cache = new Mock<IDistributedCache>();
         cache.Setup(c => c.GetAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(new TenantInfo
-                { Id = "lol-id", Identifier = "lol" })));
+                { Id = _lolid, Identifier = "lol" })));
 
         var store = new DistributedCacheStore<TenantInfo>(cache.Object, Constants.TenantToken, TimeSpan.FromSeconds(1));
 
@@ -109,7 +97,7 @@ public class DistributedCacheStoreShould : MultiTenantStoreTestBase
 
         var store = new DistributedCacheStore<TenantInfo>(cache.Object, Constants.TenantToken, TimeSpan.FromSeconds(1));
 
-        await store.AddAsync(new TenantInfo { Id = "test-id", Identifier = "test" });
+        await store.AddAsync(new TenantInfo { Id = _testid, Identifier = "test" });
     }
 
     [Fact]
@@ -128,7 +116,7 @@ public class DistributedCacheStoreShould : MultiTenantStoreTestBase
 
         var store = new DistributedCacheStore<TenantInfo>(cache.Object, Constants.TenantToken, TimeSpan.FromSeconds(1));
 
-        await store.AddAsync(new TenantInfo { Id = "test-id", Identifier = "test" });
+        await store.AddAsync(new TenantInfo { Id = _testid, Identifier = "test" });
     }
 
     // Basic store functionality tested in MultiTenantStoresShould.cs

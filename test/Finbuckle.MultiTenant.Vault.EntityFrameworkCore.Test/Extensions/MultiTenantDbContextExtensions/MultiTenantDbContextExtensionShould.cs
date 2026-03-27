@@ -15,6 +15,9 @@ public class MultiTenantDbContextExtensionsShould
     private readonly DbContextOptions _options;
     private readonly DbConnection _connection;
 
+    private readonly Guid _abc = Guid.Parse("c8d1f3c7-440e-4e76-bc77-12e33f39136e");
+    private readonly Guid _mismatch = Guid.Parse("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee");
+    
     public MultiTenantDbContextExtensionsShould()
     {
         _connection = new SqliteConnection("DataSource=:memory:");
@@ -29,7 +32,7 @@ public class MultiTenantDbContextExtensionsShould
         try
         {
             _connection.Open();
-            var tenant1 = new TenantInfo { Id = "abc", Identifier = "abc", Name = "abc" };
+            var tenant1 = new TenantInfo { Id = _abc, Identifier = "abc", Name = "abc" };
 
             // TenantNotSetMode.Throw, should act as Overwrite when adding
             using (var db = new TestDbContext(tenant1, _options))
@@ -41,7 +44,7 @@ public class MultiTenantDbContextExtensionsShould
 
                 var blog1 = new Blog { Title = "abc" };
                 db.Blogs?.Add(blog1);
-                Assert.Equal(tenant1.Identifier, db.Entry(blog1).Property("VaultId").CurrentValue);
+                Assert.Equal(tenant1.Id, db.Entry(blog1).Property("VaultId").CurrentValue);
             }
 
             // TenantNotSetMode.Overwrite
@@ -69,7 +72,7 @@ public class MultiTenantDbContextExtensionsShould
         try
         {
             _connection.Open();
-            var tenant1 = new TenantInfo { Id = "abc", Identifier = "abc", Name = "abc" };
+            var tenant1 = new TenantInfo { Id = _abc, Identifier = "abc", Name = "abc" };
 
             // TenantNotSetMode.Throw, should act as Overwrite when adding
             using (var db = new TestDbContext(tenant1, _options))
@@ -81,7 +84,7 @@ public class MultiTenantDbContextExtensionsShould
                 var blog1 = new Blog { Title = "abc" };
                 db.Blogs?.Add(blog1);
                 db.SaveChanges();
-                Assert.Equal(tenant1.Identifier, db.Entry(blog1).Property("VaultId").CurrentValue);
+                Assert.Equal(tenant1.Id, db.Entry(blog1).Property("VaultId").CurrentValue);
             }
 
             // TenantNotSetMode.Overwrite
@@ -109,7 +112,7 @@ public class MultiTenantDbContextExtensionsShould
         try
         {
             _connection.Open();
-            var tenant1 = new TenantInfo { Id = "abc", Identifier = "abc", Name = "abc" };
+            var tenant1 = new TenantInfo { Id = _abc, Identifier = "abc", Name = "abc" };
 
             // TenantMismatchMode.Throw
             using (var db = new TestDbContext(tenant1, _options))
@@ -120,7 +123,7 @@ public class MultiTenantDbContextExtensionsShould
 
                 var blog1 = new Blog { Title = "abc" };
                 db.Blogs?.Add(blog1);
-                db.Entry(blog1).Property("VaultId").CurrentValue = "77";
+                db.Entry(blog1).Property("VaultId").CurrentValue = _mismatch;
 
                 Assert.Throws<MultiTenantException>(() => db.SaveChanges());
             }
@@ -134,9 +137,9 @@ public class MultiTenantDbContextExtensionsShould
 
                 var blog1 = new Blog { Title = "34" };
                 db.Blogs?.Add(blog1);
-                db.Entry(blog1).Property("VaultId").CurrentValue = "34";
+                db.Entry(blog1).Property("VaultId").CurrentValue = _mismatch;
                 db.SaveChanges();
-                Assert.Equal("34", db.Entry(blog1).Property("VaultId").CurrentValue);
+                Assert.Equal(_mismatch, db.Entry(blog1).Property("VaultId").CurrentValue);
             }
 
             // TenantMismatchMode.Overwrite
@@ -148,7 +151,7 @@ public class MultiTenantDbContextExtensionsShould
 
                 var blog1 = new Blog { Title = "77" };
                 db.Blogs?.Add(blog1);
-                db.Entry(blog1).Property("VaultId").CurrentValue = "77";
+                db.Entry(blog1).Property("VaultId").CurrentValue = _mismatch;
                 db.SaveChanges();
                 Assert.Equal(tenant1.Id, db.Entry(blog1).Property("VaultId").CurrentValue);
             }
@@ -165,7 +168,7 @@ public class MultiTenantDbContextExtensionsShould
         try
         {
             _connection.Open();
-            var tenant1 = new TenantInfo { Id = "abc", Identifier = "abc", Name = "abc" };
+            var tenant1 = new TenantInfo { Id = _abc, Identifier = "abc", Name = "abc" };
 
             // TenantNotSetMode.Throw
             using (var db = new TestDbContext(tenant1, _options))
@@ -178,7 +181,7 @@ public class MultiTenantDbContextExtensionsShould
                 db.SaveChanges();
 
                 db.TenantNotSetMode = TenantNotSetMode.Throw;
-                db.Entry(blog1).Property("VaultId").CurrentValue = null;
+                db.Entry(blog1).Property("VaultId").CurrentValue = Guid.Empty;
 
                 Assert.Throws<MultiTenantException>(() => db.SaveChanges());
             }
@@ -194,7 +197,7 @@ public class MultiTenantDbContextExtensionsShould
                 db.SaveChanges();
 
                 db.TenantNotSetMode = TenantNotSetMode.Overwrite;
-                db.Entry(blog1).Property("VaultId").CurrentValue = null;
+                db.Entry(blog1).Property("VaultId").CurrentValue = Guid.Empty;
                 db.SaveChanges();
 
                 Assert.Equal(tenant1.Id, db.Entry(blog1).Property("VaultId").CurrentValue);
@@ -212,7 +215,7 @@ public class MultiTenantDbContextExtensionsShould
         try
         {
             _connection.Open();
-            var tenant1 = new TenantInfo { Id = "abc", Identifier = "abc", Name = "abc" };
+            var tenant1 = new TenantInfo { Id = _abc, Identifier = "abc", Name = "abc" };
 
             // TenantMismatchMode.Throw
             using (var db = new TestDbContext(tenant1, _options))
@@ -225,7 +228,7 @@ public class MultiTenantDbContextExtensionsShould
                 db.SaveChanges();
 
                 db.TenantMismatchMode = TenantMismatchMode.Throw;
-                db.Entry(blog1).Property("VaultId").CurrentValue = "11";
+                db.Entry(blog1).Property("VaultId").CurrentValue = _mismatch;
 
                 Assert.Throws<MultiTenantException>(() => db.SaveChanges());
             }
@@ -241,10 +244,10 @@ public class MultiTenantDbContextExtensionsShould
                 db.SaveChanges();
 
                 db.TenantMismatchMode = TenantMismatchMode.Ignore;
-                db.Entry(blog1).Property("VaultId").CurrentValue = "11";
+                db.Entry(blog1).Property("VaultId").CurrentValue = _mismatch;
                 db.SaveChanges();
 
-                Assert.Equal("11", db.Entry(blog1).Property("VaultId").CurrentValue);
+                Assert.Equal(_mismatch, db.Entry(blog1).Property("VaultId").CurrentValue);
             }
 
             // TenantMismatchMode.Overwrite
@@ -258,7 +261,7 @@ public class MultiTenantDbContextExtensionsShould
                 db.SaveChanges();
 
                 db.TenantMismatchMode = TenantMismatchMode.Overwrite;
-                db.Entry(blog1).Property("VaultId").CurrentValue = "11";
+                db.Entry(blog1).Property("VaultId").CurrentValue = _mismatch;
                 db.SaveChanges();
 
                 Assert.Equal(tenant1.Id, db.Entry(blog1).Property("VaultId").CurrentValue);
@@ -276,7 +279,7 @@ public class MultiTenantDbContextExtensionsShould
         try
         {
             _connection.Open();
-            var tenant1 = new TenantInfo { Id = "abc", Identifier = "abc", Name = "abc" };
+            var tenant1 = new TenantInfo { Id = _abc, Identifier = "abc", Name = "abc" };
 
             // TenantNotSetMode.Throw
             using (var db = new TestDbContext(tenant1, _options))
@@ -289,7 +292,7 @@ public class MultiTenantDbContextExtensionsShould
                 db.SaveChanges();
 
                 db.TenantNotSetMode = TenantNotSetMode.Throw;
-                db.Entry(blog1).Property("VaultId").CurrentValue = null;
+                db.Entry(blog1).Property("VaultId").CurrentValue = Guid.Empty;
                 db.Blogs?.Remove(blog1);
 
                 Assert.Throws<MultiTenantException>(() => db.SaveChanges());
@@ -306,7 +309,7 @@ public class MultiTenantDbContextExtensionsShould
                 db.SaveChanges();
 
                 db.TenantNotSetMode = TenantNotSetMode.Overwrite;
-                db.Entry(blog1).Property("VaultId").CurrentValue = null;
+                db.Entry(blog1).Property("VaultId").CurrentValue = Guid.Empty;
                 db.Blogs?.Remove(blog1);
 
                 Assert.Equal(1, db.SaveChanges());
@@ -324,7 +327,7 @@ public class MultiTenantDbContextExtensionsShould
         try
         {
             _connection.Open();
-            var tenant1 = new TenantInfo { Id = "abc", Identifier = "abc", Name = "abc" };
+            var tenant1 = new TenantInfo { Id = _abc, Identifier = "abc", Name = "abc" };
 
             // TenantMismatchMode.Throw
             using (var db = new TestDbContext(tenant1, _options))
@@ -337,7 +340,7 @@ public class MultiTenantDbContextExtensionsShould
                 db.SaveChanges();
 
                 db.TenantMismatchMode = TenantMismatchMode.Throw;
-                db.Entry(blog1).Property("VaultId").CurrentValue = "17";
+                db.Entry(blog1).Property("VaultId").CurrentValue = _mismatch;
                 db.Blogs?.Remove(blog1);
 
                 Assert.Throws<MultiTenantException>(() => db.SaveChanges());
@@ -348,7 +351,7 @@ public class MultiTenantDbContextExtensionsShould
             {
                 db.TenantMismatchMode = TenantMismatchMode.Ignore;
                 var blog1 = db.Blogs?.First();
-                db.Entry(blog1!).Property("VaultId").CurrentValue = "17";
+                db.Entry(blog1!).Property("VaultId").CurrentValue = _mismatch;
                 db.Blogs?.Remove(blog1!);
 
                 Assert.Equal(1, db.SaveChanges());
@@ -365,7 +368,7 @@ public class MultiTenantDbContextExtensionsShould
                 db.SaveChanges();
 
                 db.TenantMismatchMode = TenantMismatchMode.Overwrite;
-                db.Entry(blog1).Property("VaultId").CurrentValue = "17";
+                db.Entry(blog1).Property("VaultId").CurrentValue = _mismatch;
                 db.Blogs?.Remove(blog1);
 
                 Assert.Equal(1, db.SaveChanges());

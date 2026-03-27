@@ -16,6 +16,7 @@ namespace Finbuckle.MultiTenant.Vault.Identity.EntityFrameworkCore.Test;
 
 public class MultiTenantIdentityDbContextShould
 {
+    private readonly Guid _abc = Guid.Parse("a7761e51-66d5-4d47-892a-662d64a3b61d");
     private TContext CreateDbContextViaDi<TContext>(int schemaVersion = 3) where TContext : DbContext
     {
         var services = new ServiceCollection();
@@ -23,7 +24,7 @@ public class MultiTenantIdentityDbContextShould
         services.Configure<IdentityOptions>(o => o.Stores.SchemaVersion = new Version(schemaVersion,0));
         services.AddMultiTenant<TenantInfo>();
         // override the generic accessor with a static one bound to a test tenant
-        var tenant = new TenantInfo { Id = "abc", Identifier = "abc", Name = "abc" };
+        var tenant = new TenantInfo { Id = _abc, Identifier = "abc", Name = "abc" };
         services.AddSingleton<IMultiTenantContextAccessor<TenantInfo>>(new StaticMultiTenantContextAccessor<TenantInfo>(tenant));
         services.AddDbContext<TContext>(o =>
         {
@@ -272,7 +273,7 @@ public class MultiTenantIdentityDbContextShould
     [Fact]
     public void CreateMultiTenantIdentityDbContextWithFactory()
     {
-        var tenant1 = new TenantInfo { Id = "abc", Identifier = "abc", Name = "abc" };
+        var tenant1 = new TenantInfo { Id = _abc, Identifier = "abc", Name = "abc" };
         var c = MultiTenantDbContext.Create<MultiTenantIdentityDbContext, TenantInfo>(tenant1);
 
         Assert.NotNull(c);

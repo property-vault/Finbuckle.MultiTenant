@@ -263,7 +263,7 @@ public class MultiTenantBuilderShould
             throw new NotImplementedException();
         }
 
-        public Task<TTenant?> GetAsync(string id)
+        public Task<TTenant?> GetAsync(Guid id)
         {
             throw new NotImplementedException();
         }

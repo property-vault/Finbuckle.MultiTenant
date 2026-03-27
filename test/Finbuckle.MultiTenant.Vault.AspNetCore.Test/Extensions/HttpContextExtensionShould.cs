@@ -13,10 +13,12 @@ namespace Finbuckle.MultiTenant.Vault.AspNetCore.Test.Extensions;
 
 public class HttpContextExtensionShould
 {
+    private readonly Guid _test = Guid.Parse("d9d37904-1a15-4a24-90a9-078b68682403");
+    private readonly Guid _tenant2= Guid.Parse("d9d37904-1a15-4a24-90a9-078b68682404");
     [Fact]
     public void GetExistingMultiTenantContext()
     {
-        var ti = new TenantInfo { Id = "test", Identifier = "" };
+        var ti = new TenantInfo { Id = _test, Identifier = "" };
         var mtc = new MultiTenantContext<TenantInfo>(ti);
 
         var httpContextMock = new Mock<HttpContext>();
@@ -49,7 +51,7 @@ public class HttpContextExtensionShould
     [Fact]
     public void ReturnTenantInfo()
     {
-        var ti = new TenantInfo { Id = "test", Identifier = "" };
+        var ti = new TenantInfo { Id = _test, Identifier = "" };
         var mtc = new MultiTenantContext<TenantInfo>(ti);
 
         var httpContextMock = new Mock<HttpContext>();
@@ -89,7 +91,7 @@ public class HttpContextExtensionShould
         httpContextMock.Setup(c => c.Items).Returns(itemsDict);
         var context = httpContextMock.Object;
 
-        var ti2 = new TenantInfo { Id = "tenant2", Identifier = "" };
+        var ti2 = new TenantInfo { Id = _tenant2, Identifier = "" };
         context.SetTenantInfo(ti2, false);
         var ti = context.GetTenantInfo<TenantInfo>();
 
@@ -109,7 +111,7 @@ public class HttpContextExtensionShould
         httpContextMock.Setup(c => c.Items).Returns(itemsDict);
         var context = httpContextMock.Object;
 
-        var ti2 = new TenantInfo { Id = "tenant2", Identifier = "" };
+        var ti2 = new TenantInfo { Id = _tenant2, Identifier = "" };
         context.SetTenantInfo(ti2, false);
         var mtc = context.GetMultiTenantContext<TenantInfo>();
         var accessor = context.RequestServices.GetRequiredService<IMultiTenantContextAccessor<TenantInfo>>();
@@ -130,7 +132,7 @@ public class HttpContextExtensionShould
         httpContextMock.Setup(c => c.Items).Returns(itemsDict);
         var context = httpContextMock.Object;
 
-        var ti2 = new TenantInfo { Id = "tenant2", Identifier = "" };
+        var ti2 = new TenantInfo { Id = _tenant2, Identifier = "" };
         context.SetTenantInfo(ti2, false);
         var mtc = context.GetMultiTenantContext<TenantInfo>();
 
@@ -153,7 +155,7 @@ public class HttpContextExtensionShould
         var itemsDict = new Dictionary<object, object?>();
         httpContextMock.Setup(c => c.Items).Returns(itemsDict);
 
-        var ti2 = new TenantInfo { Id = "tenant2", Identifier = "" };
+        var ti2 = new TenantInfo { Id = _tenant2, Identifier = "" };
         httpContextMock.Object.SetTenantInfo(ti2, true);
 
         Assert.NotSame(sp, httpContextMock.Object.RequestServices);
@@ -176,7 +178,7 @@ public class HttpContextExtensionShould
         var itemsDict = new Dictionary<object, object?>();
         httpContextMock.Setup(c => c.Items).Returns(itemsDict);
 
-        var ti2 = new TenantInfo { Id = "tenant2", Identifier = "" };
+        var ti2 = new TenantInfo { Id = _tenant2, Identifier = "" };
         httpContextMock.Object.SetTenantInfo(ti2, false);
 
         Assert.Same(sp, httpContextMock.Object.RequestServices);

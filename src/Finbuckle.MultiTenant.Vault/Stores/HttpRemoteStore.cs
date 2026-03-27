@@ -61,7 +61,7 @@ public class HttpRemoteStore<TTenantInfo> : IMultiTenantStore<TTenantInfo>
     /// Not implemented in this implementation.
     /// </summary>
     /// <exception cref="NotImplementedException"></exception>
-    public Task<TTenantInfo?> GetAsync(string id)
+    public Task<TTenantInfo?> GetAsync(Guid id)
     {
         throw new NotImplementedException();
     }

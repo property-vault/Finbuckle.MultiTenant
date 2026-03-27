@@ -8,7 +8,7 @@ public interface ITenantInfo
     /// <summary>
     /// Gets a unique identifier for the tenant. Typically used as the primary key.
     /// </summary>
-    public string Id { get; }
+    public Guid Id { get; }
 
     /// <summary>
     /// Gets an externally facing identifier used for tenant resolution.

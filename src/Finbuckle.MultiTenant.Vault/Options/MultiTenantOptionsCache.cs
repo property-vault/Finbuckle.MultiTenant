@@ -15,7 +15,7 @@ public class MultiTenantOptionsCache<TOptions> : IOptionsMonitorCache<TOptions>
 {
     private readonly IMultiTenantContextAccessor multiTenantContextAccessor;
 
-    private readonly ConcurrentDictionary<string, IOptionsMonitorCache<TOptions>> map = new();
+    private readonly ConcurrentDictionary<Guid, IOptionsMonitorCache<TOptions>> map = new();
 
     /// <summary>
     /// Constructs a new instance of MultiTenantOptionsCache.
@@ -33,7 +33,7 @@ public class MultiTenantOptionsCache<TOptions> : IOptionsMonitorCache<TOptions>
     /// </summary>
     public void Clear()
     {
-        var vaultId = multiTenantContextAccessor.MultiTenantContext?.TenantInfo?.Id ?? "";
+        var vaultId = multiTenantContextAccessor.MultiTenantContext?.TenantInfo?.Id ?? Guid.Empty;
         var cache = map.GetOrAdd(vaultId, new OptionsCache<TOptions>());
 
         cache.Clear();
@@ -43,7 +43,7 @@ public class MultiTenantOptionsCache<TOptions> : IOptionsMonitorCache<TOptions>
     /// Clears all cached options for the given tenant.
     /// </summary>
     /// <param name="vaultId">The Id of the tenant which will have its options cleared.</param>
-    public void Clear(string vaultId)
+    public void Clear(Guid vaultId)
     {
         var cache = map.GetOrAdd(vaultId, new OptionsCache<TOptions>());
 
@@ -70,7 +70,7 @@ public class MultiTenantOptionsCache<TOptions> : IOptionsMonitorCache<TOptions>
         ArgumentNullException.ThrowIfNull(createOptions);
 
         name ??= Microsoft.Extensions.Options.Options.DefaultName;
-        var vaultId = multiTenantContextAccessor.MultiTenantContext?.TenantInfo?.Id ?? "";
+        var vaultId = multiTenantContextAccessor.MultiTenantContext?.TenantInfo?.Id ?? Guid.Empty;
         var cache = map.GetOrAdd(vaultId, new OptionsCache<TOptions>());
 
         return cache.GetOrAdd(name, createOptions);
@@ -85,7 +85,7 @@ public class MultiTenantOptionsCache<TOptions> : IOptionsMonitorCache<TOptions>
     public bool TryAdd(string? name, TOptions options)
     {
         name = name ?? Microsoft.Extensions.Options.Options.DefaultName;
-        var vaultId = multiTenantContextAccessor.MultiTenantContext?.TenantInfo?.Id ?? "";
+        var vaultId = multiTenantContextAccessor.MultiTenantContext?.TenantInfo?.Id ?? Guid.Empty;
         var cache = map.GetOrAdd(vaultId, new OptionsCache<TOptions>());
 
         return cache.TryAdd(name, options);
@@ -99,7 +99,7 @@ public class MultiTenantOptionsCache<TOptions> : IOptionsMonitorCache<TOptions>
     public bool TryRemove(string? name)
     {
         name = name ?? Microsoft.Extensions.Options.Options.DefaultName;
-        var vaultId = multiTenantContextAccessor.MultiTenantContext?.TenantInfo?.Id ?? "";
+        var vaultId = multiTenantContextAccessor.MultiTenantContext?.TenantInfo?.Id ?? Guid.Empty;
         var cache = map.GetOrAdd(vaultId, new OptionsCache<TOptions>());
 
         return cache.TryRemove(name);

@@ -13,6 +13,12 @@ namespace Finbuckle.MultiTenant.Test.Extensions;
 
 public class MultiTenantBuilderExtensionsShould
 {
+    private readonly Guid _initechid = Guid.Parse("c8d1f3c7-440e-4e76-bc77-12e33f39136e");
+    private readonly Guid _lolid = Guid.Parse("c8d1f3c7-440e-4e76-bc77-12e33f391364");
+    
+    private readonly Guid _initech = Guid.Parse("c8d1f3c7-440e-4e76-bc77-12e33f391365");
+    private readonly Guid _lol = Guid.Parse("c8d1f3c7-440e-4e76-bc77-12e33f391362");
+    
     [Fact]
     public void AddDistributedCacheStoreDefault()
     {
@@ -82,11 +88,11 @@ public class MultiTenantBuilderExtensionsShould
         Assert.IsType<ConfigurationStore<TenantInfo>>(store);
 
         var tc = await store.GetByIdentifierAsync("initech");
-        Assert.Equal("initech-id", tc!.Id);
+        Assert.Equal(_initechid, tc!.Id);
         Assert.Equal("initech", tc.Identifier);
 
         tc = await store.GetByIdentifierAsync("lol");
-        Assert.Equal("lol-id", tc!.Id);
+        Assert.Equal(_lolid, tc!.Id);
         Assert.Equal("lol", tc.Identifier);
     }
 
@@ -109,11 +115,11 @@ public class MultiTenantBuilderExtensionsShould
         Assert.IsType<ConfigurationStore<TenantInfo>>(store);
 
         var tc = await store.GetByIdentifierAsync("initech");
-        Assert.Equal("initech-id", tc!.Id);
+        Assert.Equal(_initechid, tc!.Id);
         Assert.Equal("initech", tc.Identifier);
 
         tc = await store.GetByIdentifierAsync("lol");
-        Assert.Equal("lol-id", tc!.Id);
+        Assert.Equal(_lolid, tc!.Id);
         Assert.Equal("lol", tc.Identifier);
     }
 
@@ -134,7 +140,7 @@ public class MultiTenantBuilderExtensionsShould
         builder.WithInMemoryStore(options =>
         {
             options.IsCaseSensitive = true;
-            options.Tenants.Add(new TenantInfo { Id = "lol", Identifier = "lol" });
+            options.Tenants.Add(new TenantInfo { Id = _lol, Identifier = "lol" });
         });
         var sp = services.BuildServiceProvider();
 
@@ -142,7 +148,7 @@ public class MultiTenantBuilderExtensionsShould
         Assert.IsType<InMemoryStore<TenantInfo>>(store);
 
         var tc = await store.GetByIdentifierAsync("lol");
-        Assert.Equal("lol", tc!.Id);
+        Assert.Equal(_lol, tc!.Id);
         Assert.Equal("lol", tc.Identifier);
 
         // Case sensitive test.
@@ -162,12 +168,10 @@ public class MultiTenantBuilderExtensionsShould
         Assert.IsType<EchoStore<TenantInfo>>(store);
 
         var tc = await store.GetByIdentifierAsync("initech");
-        Assert.Equal("initech", tc!.Id);
-        Assert.Equal("initech", tc.Identifier);
+        Assert.Equal("initech", tc!.Identifier);
 
         tc = await store.GetByIdentifierAsync("lol");
-        Assert.Equal("lol", tc!.Id);
-        Assert.Equal("lol", tc.Identifier);
+        Assert.Equal("lol", tc!.Identifier);
     }
 
     [Fact]

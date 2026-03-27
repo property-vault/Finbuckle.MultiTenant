@@ -42,7 +42,7 @@ public interface IMultiTenantStore<TTenantInfo> where TTenantInfo : ITenantInfo
     /// </summary>
     /// <param name="id">VaultId for the tenant to retrieve.</param>
     /// <returns>The found TTenantInfo instance or null if none found.</returns>
-    Task<TTenantInfo?> GetAsync(string id);
+    Task<TTenantInfo?> GetAsync(Guid id);
 
 
     /// <summary>

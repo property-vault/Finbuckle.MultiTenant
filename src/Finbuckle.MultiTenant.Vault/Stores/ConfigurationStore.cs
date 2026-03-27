@@ -87,9 +87,12 @@ public class ConfigurationStore<TTenantInfo> : IMultiTenantStore<TTenantInfo> wh
     }
 
     /// <inheritdoc />
-    public Task<TTenantInfo?> GetAsync(string id)
+    public Task<TTenantInfo?> GetAsync(Guid id)
     {
-        ArgumentNullException.ThrowIfNull(id);
+        if (id == Guid.Empty)
+        {
+            throw new ArgumentNullException(nameof(id));
+        }
         return Task.FromResult(tenantMap.Values.SingleOrDefault(v => v.Id == id));
     }
 

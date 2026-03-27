@@ -20,7 +20,7 @@ public class EchoStore<TTenantInfo> : IMultiTenantStore<TTenantInfo> where TTena
     
         // use reflection since the interfaces only has getters for id and identifier (design choice)
         var idProperty = typeof(TTenantInfo).GetProperty("Id");
-        idProperty?.SetValue(tenantInfo, identifier);
+        idProperty?.SetValue(tenantInfo, Guid.NewGuid());
         var identifierProperty = typeof(TTenantInfo).GetProperty("Identifier");
         identifierProperty?.SetValue(tenantInfo, identifier);
 
@@ -28,7 +28,7 @@ public class EchoStore<TTenantInfo> : IMultiTenantStore<TTenantInfo> where TTena
     }
 
     /// <inheritdoc />
-    public Task<TTenantInfo?> GetAsync(string id)
+    public Task<TTenantInfo?> GetAsync(Guid id)
     {
         var tenantInfo = (TTenantInfo?)RuntimeHelpers.GetUninitializedObject(typeof(TTenantInfo));
         

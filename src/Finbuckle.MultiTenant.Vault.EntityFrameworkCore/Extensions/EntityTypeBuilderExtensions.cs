@@ -55,7 +55,7 @@ public static class EntityTypeBuilderExtensions
     /// </summary>
     /// <param name="builder">The typed <see cref="EntityTypeBuilder"/> instance.</param>
     /// <returns>A <see cref="MultiTenantEntityTypeBuilder"/> instance.</returns>
-    /// <remarks>A string property named VaultId is used in the query filter. If one does not already exist on the entity a shadow property is used.</remarks>
+    /// <remarks>A Guid property named VaultId is used in the query filter. If one does not already exist on the entity a shadow property is used.</remarks>
     public static MultiTenantEntityTypeBuilder IsMultiTenant(this EntityTypeBuilder builder)
     {
         if (builder.Metadata.IsMultiTenant())
@@ -65,22 +65,22 @@ public static class EntityTypeBuilderExtensions
 
         try
         {
-            builder.Property<string>("VaultId").IsRequired();
+            builder.Property<Guid>("VaultId").IsRequired();
         }
         catch (Exception ex)
         {
             throw new MultiTenantException($"{builder.Metadata.ClrType} unable to add VaultId property", ex);
         }
 
-        // build expression tree for e => EF.Property<string>(e, "VaultId") == TenantInfo.Id
+        // build expression tree for e => EF.Property<Guid>(e, "VaultId") == TenantInfo.Id
 
         // where e is one of our entity types
         // will need this ParameterExpression for next step and for final step
         var entityParamExp = Expression.Parameter(builder.Metadata.ClrType, "e");
 
-        // build up expression tree for: EF.Property<string>(e, "VaultId")
+        // build up expression tree for: EF.Property<Guid>(e, "VaultId")
         var vaultIdExp = Expression.Constant("VaultId", typeof(string));
-        var efPropertyExp = Expression.Call(typeof(EF), nameof(EF.Property), new[] { typeof(string) }, entityParamExp,
+        var efPropertyExp = Expression.Call(typeof(EF), nameof(EF.Property), new[] { typeof(Guid) }, entityParamExp,
             vaultIdExp);
         var leftExp = efPropertyExp;
 
@@ -93,7 +93,7 @@ public static class EntityTypeBuilderExtensions
             Expression.Property(contextMemberAccessExp, nameof(IMultiTenantDbContext.TenantInfo));
         var rightExp = Expression.Property(contextTenantInfoExp, nameof(IMultiTenantDbContext.TenantInfo.Id));
 
-        // build expression tree for EF.Property<string>(e, "VaultId") == TenantInfo.Id'
+        // build expression tree for EF.Property<Guid>(e, "VaultId") == TenantInfo.Id'
         var predicate = Expression.Equal(leftExp, rightExp);
 
         // build the final expression tree

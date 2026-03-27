@@ -29,7 +29,7 @@ public class EFCoreStore<TEFCoreStoreDbContext, TTenantInfo> : IMultiTenantStore
     }
 
     /// <inheritdoc />
-    public virtual async Task<TTenantInfo?> GetAsync(string id)
+    public virtual async Task<TTenantInfo?> GetAsync(Guid id)
     {
         return await dbContext.TenantInfo.AsNoTracking()
             .Where(ti => ti.Id == id)

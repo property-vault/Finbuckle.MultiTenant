@@ -29,7 +29,8 @@ public static class MultiTenantDbContextExtensions
             if (multiTenantDbContext.TenantInfo is null)
                 throw new MultiTenantException("MultiTenant Entity cannot be attached if TenantInfo is null.");
 
-            args.Entry.Property("VaultId").CurrentValue ??= multiTenantDbContext.TenantInfo.Id;
+            if (args.Entry.Property("VaultId").CurrentValue is not Guid vaultId || vaultId == Guid.Empty)
+                args.Entry.Property("VaultId").CurrentValue = multiTenantDbContext.TenantInfo.Id;
         };
     }
 
@@ -63,8 +64,9 @@ public static class MultiTenantDbContextExtensions
 
         // handle Tenant ID mismatches for added entities
         var mismatchedAdded = addedMultiTenantEntities.Where(e =>
-            (string?)e.Property("VaultId").CurrentValue != null &&
-            (string?)e.Property("VaultId").CurrentValue != tenantInfo.Id).ToList();
+            e.Property("VaultId").CurrentValue is Guid addedVaultId &&
+            addedVaultId != Guid.Empty &&
+            addedVaultId != tenantInfo.Id).ToList();
 
         if (mismatchedAdded.Count != 0)
         {
@@ -88,7 +90,8 @@ public static class MultiTenantDbContextExtensions
         }
 
         // for added entities TenantNotSetMode is always Overwrite
-        var notSetAdded = addedMultiTenantEntities.Where(e => (string?)e.Property("VaultId").CurrentValue == null);
+        var notSetAdded = addedMultiTenantEntities.Where(e =>
+            e.Property("VaultId").CurrentValue is not Guid notSetAddedVaultId || notSetAddedVaultId == Guid.Empty);
 
         foreach (var e in notSetAdded)
         {
@@ -101,8 +104,9 @@ public static class MultiTenantDbContextExtensions
 
         // handle Tenant ID mismatches for modified entities
         var mismatchedModified = modifiedMultiTenantEntities.Where(e =>
-            (string?)e.Property("VaultId").CurrentValue != null &&
-            (string?)e.Property("VaultId").CurrentValue != tenantInfo.Id).ToList();
+            e.Property("VaultId").CurrentValue is Guid modifiedVaultId &&
+            modifiedVaultId != Guid.Empty &&
+            modifiedVaultId != tenantInfo.Id).ToList();
 
         if (mismatchedModified.Count != 0)
         {
@@ -128,7 +132,7 @@ public static class MultiTenantDbContextExtensions
 
         // handle Tenant ID not set for modified entities
         var notSetModified = modifiedMultiTenantEntities
-            .Where(e => (string?)e.Property("VaultId").CurrentValue == null).ToList();
+            .Where(e => e.Property("VaultId").CurrentValue is not Guid notSetModifiedVaultId || notSetModifiedVaultId == Guid.Empty).ToList();
 
         if (notSetModified.Count != 0)
         {
@@ -152,8 +156,9 @@ public static class MultiTenantDbContextExtensions
 
         // handle Tenant ID mismatches for deleted entities
         var mismatchedDeleted = deletedMultiTenantEntities.Where(e =>
-            (string?)e.Property("VaultId").CurrentValue != null &&
-            (string?)e.Property("VaultId").CurrentValue != tenantInfo.Id).ToList();
+            e.Property("VaultId").CurrentValue is Guid deletedVaultId &&
+            deletedVaultId != Guid.Empty &&
+            deletedVaultId != tenantInfo.Id).ToList();
 
         if (mismatchedDeleted.Count != 0)
         {
@@ -174,7 +179,8 @@ public static class MultiTenantDbContextExtensions
         }
 
         // handle Tenant Id not set for deleted entities
-        var notSetDeleted = deletedMultiTenantEntities.Where(e => (string?)e.Property("VaultId").CurrentValue == null)
+        var notSetDeleted = deletedMultiTenantEntities.Where(e =>
+            e.Property("VaultId").CurrentValue is not Guid notSetDeletedVaultId || notSetDeletedVaultId == Guid.Empty)
             .ToList();
 
         if (notSetDeleted.Count != 0)

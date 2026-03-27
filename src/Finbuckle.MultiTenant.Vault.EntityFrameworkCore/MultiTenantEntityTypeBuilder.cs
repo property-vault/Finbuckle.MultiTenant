@@ -78,7 +78,7 @@ public class MultiTenantEntityTypeBuilder
         foreach (var fk in foreignKeys)
         {
             var fkEntityBuilder = modelBuilder.Entity(fk.DeclaringEntityType.ClrType);
-            var newFkProp = fkEntityBuilder.Property<string>("VaultId").Metadata;
+            var newFkProp = fkEntityBuilder.Property<Guid>("VaultId").Metadata;
             var fkProps = fk.Properties.Append(newFkProp).ToImmutableList();
             fk.SetProperties(fkProps, newKey!);
         }

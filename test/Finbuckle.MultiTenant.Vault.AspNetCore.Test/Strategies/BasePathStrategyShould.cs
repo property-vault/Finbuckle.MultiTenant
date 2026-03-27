@@ -15,6 +15,9 @@ namespace Finbuckle.MultiTenant.Vault.AspNetCore.Test.Strategies;
 
 public class BasePathStrategyShould
 {
+    private readonly Guid _base123 = Guid.Parse("d9be2848-5345-4a47-bf9f-c820cbba722f");
+    private readonly Guid _tenant = Guid.Parse("d9be2848-5345-4a47-bf9f-c820cbba7224");
+    
     private HttpContext CreateHttpContextMock(string path, string pathBase = "/")
     {
         var mock = new Mock<HttpContext>();
@@ -30,7 +33,7 @@ public class BasePathStrategyShould
         var services = new ServiceCollection();
         services.AddOptions().AddMultiTenant<TenantInfo>().WithBasePathStrategy().WithInMemoryStore(options =>
         {
-            options.Tenants.Add(new TenantInfo { Id = "base123", Identifier = "base", Name = "base tenant" });
+            options.Tenants.Add(new TenantInfo { Id = _base123, Identifier = "base", Name = "base tenant" });
         });
         services.Configure<BasePathStrategyOptions>(options => options.RebaseAspNetCorePathBase = true);
         var serviceProvider = services.BuildServiceProvider();
@@ -53,7 +56,7 @@ public class BasePathStrategyShould
         var services = new ServiceCollection();
         services.AddOptions().AddMultiTenant<TenantInfo>().WithBasePathStrategy().WithInMemoryStore(options =>
         {
-            options.Tenants.Add(new TenantInfo { Id = "base123", Identifier = "base", Name = "base tenant" });
+            options.Tenants.Add(new TenantInfo { Id = _base123, Identifier = "base", Name = "base tenant" });
         });
         services.Configure<BasePathStrategyOptions>(options => options.RebaseAspNetCorePathBase = false);
         var serviceProvider = services.BuildServiceProvider();
@@ -101,7 +104,7 @@ public class BasePathStrategyShould
         var services = new ServiceCollection();
         services.AddOptions().AddMultiTenant<TenantInfo>().WithBasePathStrategy().WithInMemoryStore(options =>
         {
-            options.Tenants.Add(new TenantInfo { Id = "tenant", Identifier = "tenant", Name = "tenant" });
+            options.Tenants.Add(new TenantInfo { Id = _tenant, Identifier = "tenant", Name = "tenant" });
         });
         services.Configure<BasePathStrategyOptions>(options => options.RebaseAspNetCorePathBase = true);
         var serviceProvider = services.BuildServiceProvider();

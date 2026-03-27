@@ -68,7 +68,7 @@ public class TenantResolverShould
         var sp = services.BuildServiceProvider();
         await sp.GetServices<IMultiTenantStore<TenantInfo>>()
             .Single(i => i.GetType() == typeof(InMemoryStore<TenantInfo>))
-            .AddAsync(new TenantInfo { Id = "null", Identifier = "null" });
+            .AddAsync(new TenantInfo { Id = Guid.Empty, Identifier = "null" });
 
         var resolver = sp.GetRequiredService<ITenantResolver<TenantInfo>>();
         var result = await resolver.ResolveAsync(new object());
@@ -114,7 +114,7 @@ public class TenantResolverShould
         var sp = services.BuildServiceProvider();
         await sp.GetServices<IMultiTenantStore<TenantInfo>>()
             .Single(i => i.GetType() == typeof(InMemoryStore<TenantInfo>))
-            .AddAsync(new TenantInfo { Id = "null", Identifier = "null" });
+            .AddAsync(new TenantInfo { Id = Guid.Empty, Identifier = "null" });
 
         var resolver = sp.GetRequiredService<ITenantResolver<TenantInfo>>();
         var result = await resolver.ResolveAsync(new object());

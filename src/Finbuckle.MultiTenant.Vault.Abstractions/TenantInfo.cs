@@ -9,7 +9,7 @@ namespace Finbuckle.MultiTenant.Vault.Abstractions;
 public class TenantInfo : ITenantInfo
 {
     /// <inheritdoc />
-    public required string Id { get; init; }
+    public required Guid Id { get; init; }
 
     /// <inheritdoc />
     public required string Identifier { get; init; }

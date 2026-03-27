@@ -2,13 +2,13 @@
   "Finbuckle:MultiTenant:Stores:ConfigurationStore": {
     "Tenants": [
       {
-        "Id": "initech-id",
+        "Id": "96ae9dfb-d371-4828-aaa5-236952dc3796",
         "Identifier": "initech",
         "Name": "Initech",
         "ConnectionString": "Datasource=sample.db"
       },
       {
-        "Id": "lol-id",
+        "Id": "96ae9dfb-d371-4828-aaa5-236952dc3797",
         "Identifier": "lol",
         "Name": "LOL",
         "ConnectionString": "Datasource=lol.db"

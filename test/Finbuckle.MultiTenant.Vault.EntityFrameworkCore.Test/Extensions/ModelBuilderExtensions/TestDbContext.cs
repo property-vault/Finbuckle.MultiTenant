@@ -27,10 +27,10 @@ public class TestDbContext : DbContext
 [MultiTenant]
 public class MyMultiTenantThing
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 }
 
 public class MyThing
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 }

@@ -78,7 +78,7 @@ public class ServiceCollectionExtensionsShould
 
     public class TestOptions
     {
-        public string? Prop1 { get; set; }
+        public Guid Prop1 { get; set; }
     }
 
     [Fact]

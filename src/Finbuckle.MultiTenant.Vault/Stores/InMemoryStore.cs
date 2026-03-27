@@ -35,7 +35,7 @@ public class InMemoryStore<TTenantInfo> : IMultiTenantStore<TTenantInfo>
         _tenantMap = new ConcurrentDictionary<string, TTenantInfo>(stringComparer);
         foreach (var tenant in _options.Tenants)
         {
-            if (String.IsNullOrWhiteSpace(tenant.Id))
+            if (Guid.Empty == tenant.Id)
                 throw new MultiTenantException("Missing tenant id in options.");
             if (String.IsNullOrWhiteSpace(tenant.Identifier))
                 throw new MultiTenantException("Missing tenant identifier in options.");
@@ -47,7 +47,7 @@ public class InMemoryStore<TTenantInfo> : IMultiTenantStore<TTenantInfo>
     }
 
     /// <inheritdoc />
-    public async Task<TTenantInfo?> GetAsync(string id)
+    public async Task<TTenantInfo?> GetAsync(Guid id)
     {
         var result = _tenantMap.Values.SingleOrDefault(ti => ti.Id == id);
         return await Task.FromResult(result).ConfigureAwait(false);

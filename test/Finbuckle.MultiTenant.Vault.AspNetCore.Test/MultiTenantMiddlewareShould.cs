@@ -15,6 +15,8 @@ namespace Finbuckle.MultiTenant.Vault.AspNetCore.Test;
 
 public class MultiTenantMiddlewareShould
 {
+    private readonly Guid _initech = Guid.Parse("b0d49390-400d-490c-856e-fa880a7fca6e");
+    
     [Fact]
     public async Task SetHttpContextItemIfTenantFound()
     {
@@ -22,7 +24,7 @@ public class MultiTenantMiddlewareShould
         services.AddMultiTenant<TenantInfo>().WithStaticStrategy("initech").WithInMemoryStore();
         var sp = services.BuildServiceProvider();
         var store = sp.GetRequiredService<IMultiTenantStore<TenantInfo>>();
-        await store.AddAsync(new TenantInfo { Id = "initech", Identifier = "initech" });
+        await store.AddAsync(new TenantInfo { Id = _initech, Identifier = "initech" });
 
         var context = new Mock<HttpContext>();
         context.Setup(c => c.RequestServices).Returns(sp);
@@ -38,7 +40,7 @@ public class MultiTenantMiddlewareShould
         var mtc = (IMultiTenantContext<TenantInfo>?)context.Object.Items[typeof(IMultiTenantContext)];
 
         Assert.NotNull(mtc?.TenantInfo);
-        Assert.Equal("initech", mtc.TenantInfo.Id);
+        Assert.Equal(_initech, mtc.TenantInfo.Id);
     }
 
     [Fact]
@@ -48,7 +50,7 @@ public class MultiTenantMiddlewareShould
         services.AddMultiTenant<TenantInfo>().WithStaticStrategy("initech").WithInMemoryStore();
         var sp = services.BuildServiceProvider();
         var store = sp.GetRequiredService<IMultiTenantStore<TenantInfo>>();
-        await store.AddAsync(new TenantInfo { Id = "initech", Identifier = "initech" });
+        await store.AddAsync(new TenantInfo { Id = _initech, Identifier = "initech" });
 
         var context = new Mock<HttpContext>();
         context.Setup(c => c.RequestServices).Returns(sp);
@@ -76,7 +78,7 @@ public class MultiTenantMiddlewareShould
         var mtc = (IMultiTenantContext<TenantInfo>?)context.Object.Items[typeof(IMultiTenantContext)];
 
         Assert.NotNull(mtc?.TenantInfo);
-        Assert.Equal("initech", mtc.TenantInfo.Id);
+        Assert.Equal(_initech, mtc.TenantInfo.Id);
         Assert.True(calledNext);
         response.Verify(r => r.Redirect("/tenant/notfound"), Times.Never);
     }
@@ -88,7 +90,7 @@ public class MultiTenantMiddlewareShould
         services.AddMultiTenant<TenantInfo>().WithStaticStrategy("initech").WithInMemoryStore();
         var sp = services.BuildServiceProvider();
         var store = sp.GetRequiredService<IMultiTenantStore<TenantInfo>>();
-        await store.AddAsync(new TenantInfo { Id = "initech", Identifier = "initech" });
+        await store.AddAsync(new TenantInfo { Id = _initech, Identifier = "initech" });
 
         var context = new Mock<HttpContext>();
         context.Setup(c => c.RequestServices).Returns(sp);
@@ -122,7 +124,7 @@ public class MultiTenantMiddlewareShould
         services.AddMultiTenant<TenantInfo>().WithStaticStrategy("not_initech").WithInMemoryStore();
         var sp = services.BuildServiceProvider();
         var store = sp.GetRequiredService<IMultiTenantStore<TenantInfo>>();
-        await store.AddAsync(new TenantInfo { Id = "initech", Identifier = "initech" });
+        await store.AddAsync(new TenantInfo { Id = _initech, Identifier = "initech" });
 
         var context = new Mock<HttpContext>();
         context.Setup(c => c.RequestServices).Returns(sp);
@@ -156,7 +158,7 @@ public class MultiTenantMiddlewareShould
         services.AddMultiTenant<TenantInfo>().WithStaticStrategy("not_initech").WithInMemoryStore();
         var sp = services.BuildServiceProvider();
         var store = sp.GetRequiredService<IMultiTenantStore<TenantInfo>>();
-        await store.AddAsync(new TenantInfo { Id = "initech", Identifier = "initech" });
+        await store.AddAsync(new TenantInfo { Id = _initech, Identifier = "initech" });
 
         var context = new Mock<HttpContext>();
         context.Setup(c => c.RequestServices).Returns(sp);
@@ -197,7 +199,7 @@ public class MultiTenantMiddlewareShould
         services.AddMultiTenant<TenantInfo>().WithStaticStrategy("not_initech").WithInMemoryStore();
         var sp = services.BuildServiceProvider();
         var store = sp.GetRequiredService<IMultiTenantStore<TenantInfo>>();
-        await store.AddAsync(new TenantInfo { Id = "initech", Identifier = "initech" });
+        await store.AddAsync(new TenantInfo { Id = _initech, Identifier = "initech" });
 
         var context = new Mock<HttpContext>();
         context.Setup(c => c.RequestServices).Returns(sp);
